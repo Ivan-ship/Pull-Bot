@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 import aiohttp
-import json
 from aiogram import Router
 
 load_dotenv()
@@ -22,13 +21,17 @@ API_URL = os.getenv("API_URL")
 @router.message(CommandStart())
 async def command_start_handler(message: Message):
     telegram_id = message.from_user.id
-    username = message.from_username
+    username = message.from_user.username
+    first_name = message.from_user.first_name
+    last_name = message.from_user.last_name
 
     try:
         async with aiohttp.ClientSession() as session:
             async with session.post(API_URL, json = {
                 "telegram_id": telegram_id,
-                "username": username
+                "username": username,
+                "first_name": first_name,
+                "last_name": last_name
             },
                 timeout=aiohttp.ClientTimeout(total=10)
             ) as resp:
@@ -57,6 +60,7 @@ async def command_start_handler(message: Message):
         print(f"Неизвестная ошибка! {e}")
 
 async def main():
+    dp.include_router(router)
     await dp.start_polling(bot)
 
 
