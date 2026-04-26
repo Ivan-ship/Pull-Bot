@@ -6,6 +6,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message
 import aiohttp
 from aiogram import Router
+from buttons import main_kb
 
 load_dotenv()
 
@@ -48,7 +49,7 @@ async def command_start_handler(message: Message):
                 except Exception:
                     await message.answer("Ошибка ответа сервера!")
                     return
-        await message.answer("Приветствуем в приложении Test+")
+        await message.answer("Приветствуем в приложении Test+", reply_markup=main_kb)
     
     except asyncio.TimeoutError:
         await message.answer("Сервер не отвечает")
